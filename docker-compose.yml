@@ -1,0 +1,29 @@
+version: '1.0'
+services:
+  database:
+    image: mysql:5.7
+    container_name: MyDatabase-SQL
+    environment:
+      MYSQL_ROOT_PASSWORD: cases123
+    build:
+      context: ./database
+      dockerfile: Dockerfile
+    ports:
+      - "3306:3306"
+
+  webapp:
+    container_name: App
+    build:
+      context: ./webapp
+      dockerfile: Dockerfile
+    environment:
+      MYSQL_HOST: database
+      MYSQL_USER: root
+      MYSQL_PASSWORD: cases123
+      MYSQL_DB: case_studies
+    ports:
+      - "5000:80"
+    depends_on:
+      - database
+    command:
+      - "python server.py"
